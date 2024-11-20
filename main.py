@@ -1,55 +1,77 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 import streamlit as st
+import helper
+
 linreg = LinearRegression()
+dataFrame = helper.get_dfFromCsv("data/stadat-jov0001-14.1.1.1-hu.csv")
+dataFrame = helper.dfManipulation(dataFrame) #Tábla forgatás, manupulálás.
 
-def getData():
-  df = pd.read_csv("data/stadat-jov0001-14.1.1.1-hu.csv",sep=';',encoding='ansi',header=1)
-  return df
+yArray = dataFrame.iloc[:,1].str.replace(' ','').map(int).values.reshape(-1, 1)
+xArray = dataFrame.iloc[:,0].map(int).values.reshape(-1, 1) #xPS.map(int).values.reshape(-1, 1)
 
-
-dataFrame = getData()
-
-yPS = dataFrame.iloc[0,1:].str.replace(' ','').map(int)
-xPS = dataFrame.set_index('Megnevezés').columns
-
-yArray = yPS.values.reshape(-1, 1)
-xArray = xPS.map(int).values.reshape(-1, 1)
 
 #x_train,x_test,y_train,y_test = train_test_split(xArray,yArray,test_size=0.2,random_state=0)
 linreg.fit(xArray,yArray)
-linreg.predict(xArray)
 
+# Streamlit View
+# Title
+st.markdown(
+    """
+    <style>
+    .title {
+        text-align: center;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+st.markdown('<h1 class="title">Programozás alapok beadandó feladat.</h1>', unsafe_allow_html=True)
 
-#Visu
+# Slider
+regVal = st.slider("Év kiválasztása", 2015, 2050, 2024)
+futureXArr = helper.get_futureList(regVal,2023)
+
+# Year / Income calculated value
+col1,col2 = st.columns(2)
+with col1:
+  st.metric(
+    label="Év:",
+    value=regVal
+  )
+with col2:
+  st.metric(
+    label="Jövedelem:",
+    value=linreg.predict([[int(regVal)]])
+  )
+
+# Plot
 fig, ax = plt.subplots()
-#plot def data
 plt.title("A háztartások egy főre jutó éves nettó jövedelme")
 plt.ylabel("mFt / év")
-ax.plot(xArray,yArray,"bo")
+plt.xlabel("Év")
+ax.yaxis.set_major_formatter(mpl.ticker.EngFormatter()) #Ez segít Y tengely milliós érték megjelenítésben
+plt.grid(linestyle = '--') #Háttér vonalazás
+ax.plot(xArray,yArray,"o",color="orange", label = "Tényleges") #Eredeti adatok
 
-#plot linreg
-ax.plot(xArray,linreg.predict(xArray),"o:r")
+ax.plot(xArray,linreg.predict(xArray),"o:",color="magenta",label = "Lineáris regresszió") #Eredeti X tengely adatok mentén Linreg
+ax.plot(futureXArr,linreg.predict(futureXArr),"o:", color = "darkturquoise", label = "Prediktív") #Változtatható X tengely adat menti Linreg
+ax.legend(shadow=True,fontsize = "x-small") #Diagram nevek mérete
 
-futureXArr = [[2023],[2024],[2025],[2026]]
-ax.plot(futureXArr,linreg.predict(futureXArr),"o:g")
+fig.set_figwidth(8) #Grafikon szélesség
+st.write(fig) #Grafikon streamlit-ba ágyazása
 
-#Regression Error score
+# Data matrix
+with st.expander("Tényleges Adatok"):
+  st.dataframe(dataFrame)
+
+# Regression Error score
 r2 = r2_score(yArray,linreg.predict(xArray))
 print("Linear regression error score:" + str(r2))
 
-#plt.show()
-
-dataFrame = dataFrame.set_index(dataFrame.columns[0]).T.rename_axis("Év").rename_axis("",axis="columns").reset_index()
-with st.expander("Adatok"):
-  st.dataframe(dataFrame)
-
-#st.write(type(dataFrame))
-#dataFrame.sort_values("A háztartások egy főre jutó éves nettó jövedelme, forint", ascending=True)
-st.line_chart(dataFrame,x="Év",y="A háztartások egy főre jutó éves nettó jövedelme, forint")
-st.write(fig)
-#st.line_chart(dataFrame,x="Év",y="A háztartások egy főre jutó éves nettó jövedelme, forint")
-#st.write(dataFrame)
+if __name__ == "__main__":
+  print("Teszt")
