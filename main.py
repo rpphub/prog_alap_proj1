@@ -7,6 +7,8 @@ from sklearn.metrics import r2_score
 import streamlit as st
 import helper
 
+import view.plot
+
 linreg = LinearRegression()
 dataFrame = helper.get_dfFromCsv("data/stadat-jov0001-14.1.1.1-hu.csv")
 dataFrame = helper.dfManipulation(dataFrame) #Tábla forgatás, manupulálás.
@@ -50,19 +52,15 @@ with col2:
   )
 
 # Plot
-fig, ax = plt.subplots()
-plt.title("A háztartások egy főre jutó éves nettó jövedelme")
-plt.ylabel("mFt / év")
-plt.xlabel("Év")
-ax.yaxis.set_major_formatter(mpl.ticker.EngFormatter()) #Ez segít Y tengely milliós érték megjelenítésben
-plt.grid(linestyle = '--') #Háttér vonalazás
+fig, ax = view.plot.buildPlot()
+
+'''
 ax.plot(xArray,yArray,"o",color="orange", label = "Tényleges") #Eredeti adatok
 
 ax.plot(xArray,linreg.predict(xArray),"o:",color="magenta",label = "Lineáris regresszió") #Eredeti X tengely adatok mentén Linreg
 ax.plot(futureXArr,linreg.predict(futureXArr),"o:", color = "darkturquoise", label = "Prediktív") #Változtatható X tengely adat menti Linreg
-ax.legend(shadow=True,fontsize = "x-small") #Diagram nevek mérete
 
-fig.set_figwidth(8) #Grafikon szélesség
+'''
 st.write(fig) #Grafikon streamlit-ba ágyazása
 
 # Data matrix
