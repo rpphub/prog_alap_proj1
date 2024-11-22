@@ -6,5 +6,5 @@ Projekt telepítés cmd-ben::
   cd prog_alap_proj1
   py -m venv env
   env\Scripts\activate
-  py -m pip install -r requirements
+  py -m pip install -r requirements.txt
 ```
