@@ -10,9 +10,9 @@ Projekt telepítés cmd-ben
 ```
 
 Program indítás
+
 ```
 env\Scripts\activate
 streamlit run main.py
-``
-
+```
 Ha aktív az env(cmdben (env) látható) akkor nem kell aktiválni.
