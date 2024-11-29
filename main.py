@@ -19,6 +19,16 @@ r2 = r2_score(yArray,linreg.predict(xArray)) # Regression Error score, ez csak �
 print("Lineáris regresszió pontossága:" + str(r2))
 
 # Streamlit View
+st.set_page_config(
+  page_title="Programozás alapok beadandó",
+  page_icon=":bar_chart:",
+)
+
+with st.sidebar:
+    st.page_link('main.py', label='Project', icon=':material/bar_chart:')
+    st.page_link('pages/about.py', label='Készítők', icon=':material/handshake:')
+
+
 # Title
 st.markdown("<h1 style='text-align: center;'>Programozás alapok beadandó feladat</h1>", unsafe_allow_html=True)
 st.markdown("***")
