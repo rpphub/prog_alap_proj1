@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.set_page_config(
-  page_title="Programozás alapok beadandó",
+  page_title="Programozási alapok beadandó",
   page_icon=":bar_chart:",
 )
 

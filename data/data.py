@@ -11,7 +11,7 @@ class Data:
     return list
 
   def get_df_from_csv(path)-> pd.DataFrame:
-    df = pd.read_csv(path,sep=';',encoding='ansi',header=1)
+    df = pd.read_csv(path,sep=';',encoding='latin1',header=1)
     return df
 
   def data_manipulation(df)-> pd.DataFrame:
