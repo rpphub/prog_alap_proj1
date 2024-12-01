@@ -24,7 +24,7 @@ print("Lineáris regresszió pontossága:" + str(r2))
 ############## Robi - Streamlit ############
 # Streamlit View
 st.set_page_config(
-  page_title="Programozás alapok beadandó",
+  page_title="Programozási alapok beadandó",
   page_icon=":bar_chart:",
 )
 
@@ -34,7 +34,7 @@ with st.sidebar:
 
 
 # Title
-st.markdown("<h1 style='text-align: center;'>Programozás alapok beadandó feladat</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Programozási alapok beadandó feladat</h1>", unsafe_allow_html=True)
 st.markdown("***")
 
 # Slider
@@ -65,6 +65,9 @@ st.write(dg.fig) #Grafikon streamlit-ba ágyazása
 
 
 # Data matrix
+with st.expander("Lineáris regresszió: "):
+  st.text(r2)
+
 with st.expander("Tényleges Adatok"):
   st.dataframe(df_raw)
 
